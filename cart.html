@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <style>
+        td 
+        {
+            text-align: center
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style1.css">
+    <link rel="stylesheet" href="font.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <link rel="stylesheet" href="text.css">
+    <link rel="stylesheet" href="style1.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script>
+        var cart = [];
+        $(function () {
+            if (localStorage.cart) {
+                cart = JSON.parse(localStorage.cart);
+                showCart();
+            }
+        });
+
+        function addToCart() {
+            var price = $("#products").val();
+            var name = $("#products option:selected").text();
+            var qty = $("#qty").val();
+
+            // update qty if product is already present
+            for (var i in cart) {
+                if (cart[i].Product == name) {
+                    cart[i].Qty = qty;
+                    showCart();
+                    saveCart();
+                    return;
+                }
+            }
+            // create JavaScript Object
+            var item = { Product: name, Price: price, Qty: qty };
+            cart.push(item);
+            saveCart();
+            showCart();
+        }
+
+        function deleteItem(index) {
+            cart.splice(index, 1); // delete item at index
+            showCart();
+            saveCart();
+        }
+
+        function saveCart() {
+            if (window.localStorage) {
+                localStorage.cart = JSON.stringify(cart);
+            }
+        }
+
+        function showCart() {
+            if (cart.length == 0) {
+                $("#cart").css("visibility", "hidden");
+                return;
+            }
+
+            $("#cart").css("visibility", "visible");
+            $("#cartBody").empty();
+            for (var i in cart) {
+                var item = cart[i];
+                var row = "<tr><td>" + item.Product + "</td><td>" +
+                    item.Price + "</td><td>" + item.Qty + "</td><td>"
+                    + item.Qty * item.Price + "</td><td>"
+                    + "<button onclick='deleteItem(" + i + ")'>Delete</button></td></tr>";
+                $("#cartBody").append(row);
+            }
+        }
+    </script>
+    <style>
+        body 
+        {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background-image: url('IMG.jpg');
+            background-size: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="res-display-container res-text-white">
+            <div class="res-display-topleft res-container res-xlarge">
+                <p><button onclick="window.location.href='main.html'" class="res-button res-black"><span
+                            class="txt anim-text-flow">Home</span></button></p>
+            </div>
+            
+            <div class="section">
+                <h1><span class="txt anim-text-flow">Cart</span></h1>
+            </div>
+            <br>
+            <br>
+            
+            <div class="column">
+                <select id="products" class="res-input res-padding-16 res-border">
+                    <option value="" disabled selected>Select your dish</option>
+                    <option value="320">Chiken Biryani</option>
+                    <option value="300">Butter Chicken</option>
+                    <option value="270">Shahi Paneer</option>
+                    <option value="250">Mallai Kofta</option>
+                    <option value="350">Dum Biriyani</option>
+                </select>
+                
+                <select id="qty" class="res-input res-padding-16 res-border">
+                    <option value="" disabled selected>Select Quantity</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                </select>
+                <br>
+                <button class="res-button-close2" id="btnAdd" onclick="addToCart()">Add To Cart</button>
+            
+                <p></p>
+                <table id="cart" style="visibility:hidden; width:100%">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Qty</th>
+                            <th>Total</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartBody">
+            
+                    </tbody>
+                </table>
+            </div>
+            
+            <script src='text.js'></script>
+            <script src="script.js"></script>
+    </div>
+</body>
+</html>
